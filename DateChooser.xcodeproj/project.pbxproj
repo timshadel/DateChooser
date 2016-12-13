@@ -10,6 +10,8 @@
 		7057D7401E008CF000C383AF /* DateChooser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7057D7361E008CF000C383AF /* DateChooser.framework */; };
 		7057D7451E008CF000C383AF /* DateChooserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7057D7441E008CF000C383AF /* DateChooserTests.swift */; };
 		7057D7471E008CF000C383AF /* DateChooser.h in Headers */ = {isa = PBXBuildFile; fileRef = 7057D7391E008CF000C383AF /* DateChooser.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7057D7511E008D4700C383AF /* DateChooser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7057D7501E008D4700C383AF /* DateChooser.swift */; };
+		7057D7531E00908500C383AF /* DateChooserCapabilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7057D7521E00908500C383AF /* DateChooserCapabilities.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +31,8 @@
 		7057D73F1E008CF000C383AF /* DateChooserTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DateChooserTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7057D7441E008CF000C383AF /* DateChooserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateChooserTests.swift; sourceTree = "<group>"; };
 		7057D7461E008CF000C383AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7057D7501E008D4700C383AF /* DateChooser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateChooser.swift; sourceTree = "<group>"; };
+		7057D7521E00908500C383AF /* DateChooserCapabilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateChooserCapabilities.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +76,8 @@
 			isa = PBXGroup;
 			children = (
 				7057D7391E008CF000C383AF /* DateChooser.h */,
+				7057D7501E008D4700C383AF /* DateChooser.swift */,
+				7057D7521E00908500C383AF /* DateChooserCapabilities.swift */,
 				7057D73A1E008CF000C383AF /* Info.plist */,
 			);
 			path = DateChooser;
@@ -149,6 +155,7 @@
 					7057D7351E008CF000C383AF = {
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = M9Y5WF87VL;
+						LastSwiftMigration = 0810;
 						ProvisioningStyle = Automatic;
 					};
 					7057D73E1E008CF000C383AF = {
@@ -198,6 +205,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7057D7511E008D4700C383AF /* DateChooser.swift in Sources */,
+				7057D7531E00908500C383AF /* DateChooserCapabilities.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,6 +331,7 @@
 		7057D74B1E008CF000C383AF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = M9Y5WF87VL;
@@ -334,6 +344,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = design.bsn.DateChooser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -341,6 +352,7 @@
 		7057D74C1E008CF000C383AF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = M9Y5WF87VL;
@@ -360,6 +372,7 @@
 		7057D74E1E008CF000C383AF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = M9Y5WF87VL;
 				INFOPLIST_FILE = DateChooserTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -372,6 +385,7 @@
 		7057D74F1E008CF000C383AF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = M9Y5WF87VL;
 				INFOPLIST_FILE = DateChooserTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -400,6 +414,7 @@
 				7057D74C1E008CF000C383AF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7057D74D1E008CF000C383AF /* Build configuration list for PBXNativeTarget "DateChooserTests" */ = {
 			isa = XCConfigurationList;
@@ -408,6 +423,7 @@
 				7057D74F1E008CF000C383AF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
