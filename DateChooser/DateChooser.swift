@@ -38,6 +38,12 @@ import UIKit
         }
     }
     
+    @IBInspectable open var innerBorderColor: UIColor = .lightGray {
+        didSet {
+            updateColors()
+        }
+    }
+    
     @IBInspectable open var titleFont: UIFont = .systemFont(ofSize: 17) {
         didSet {
             title.font = titleFont
@@ -74,12 +80,21 @@ import UIKit
     
     // MARK: - Internal properties
     
-    var title = UILabel()
-    var segmentedControl = UISegmentedControl()
-    var datePicker = UIDatePicker()
-    var removeDateButton = UIButton(type: .system)
-    var setToCurrentButton = UIButton(type: .system)
-    var saveButton = UIButton(type: .system)
+    let title = UILabel()
+    let segmentedControl = UISegmentedControl()
+    let datePicker = UIDatePicker()
+    let removeDateBorder = UIView()
+    let removeDateButton = UIButton(type: .system)
+    let currentBorder = UIView()
+    let setToCurrentButton = UIButton(type: .system)
+    let saveBorder = UIView()
+    let saveButton = UIButton(type: .system)
+    let stackView = UIStackView()
+    
+    
+    // MARK: - Constants
+    
+    static fileprivate let innerMargin: CGFloat = 8.0
     
     
     // MARK: - Overrides
@@ -98,6 +113,29 @@ import UIKit
         updateColors()
     }
     
+    
+    // MARK: - Internal functions
+    
+    func updateDatePicker() {
+        let temp = 4
+    }
+    
+    func dateChanged() {
+        let temp = 3
+    }
+    
+    func removeDate() {
+        let temp = 4
+    }
+    
+    func setDateToCurrent() {
+        let temp = 2
+    }
+    
+    func saveChanges() {
+        let temp = 3
+    }
+    
 }
 
 
@@ -106,7 +144,42 @@ import UIKit
 private extension DateChooser {
     
     func setupViews() {
-        let temp = 2
+        updateCapabilities()
+        
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(stackView)
+        constrainFullWidth(stackView, top: DateChooser.innerMargin)
+        stackView.axis = .vertical
+        
+        let titleContainer = UIView()
+        titleContainer.addSubview(title)
+        constrainFullWidth(title, leading: DateChooser.innerMargin, trailing: DateChooser.innerMargin)
+        stackView.addArrangedSubview(titleContainer)
+        title.font = titleFont
+        
+        let segmentedContainer = UIView()
+        segmentedContainer.addSubview(segmentedControl)
+        constrainFullWidth(segmentedControl, leading: DateChooser.innerMargin * 2, top: DateChooser.innerMargin, trailing: DateChooser.innerMargin * 2, bottom: DateChooser.innerMargin)
+        stackView.addArrangedSubview(segmentedContainer)
+        segmentedControl.addTarget(self, action: #selector(updateDatePicker), for: .valueChanged)
+        
+        stackView.addArrangedSubview(datePicker)
+        updateDatePicker()
+        datePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
+        
+        stackView.addArrangedSubview(removeDateBorder)
+        stackView.addArrangedSubview(removeDateButton)
+        removeDateButton.addTarget(self, action: #selector(removeDate), for: .touchUpInside)
+        
+        stackView.addArrangedSubview(currentBorder)
+        stackView.addArrangedSubview(setToCurrentButton)
+        setToCurrentButton.addTarget(self, action: #selector(setDateToCurrent), for: .touchUpInside)
+        
+        stackView.addArrangedSubview(saveBorder)
+        stackView.addArrangedSubview(saveButton)
+        saveButton.addTarget(self, action: #selector(saveChanges), for: .touchUpInside)
+        
+        updateColors()
     }
     
     func updateColors() {
@@ -115,6 +188,14 @@ private extension DateChooser {
     
     func updateCapabilities() {
         let temp = 1
+    }
+    
+    func constrainFullWidth(_ view: UIView, leading: CGFloat = 0, top: CGFloat = 0, trailing: CGFloat = 0, bottom: CGFloat = 0) {
+        guard let superview = view.superview else { fatalError("\(view) has no superview") }
+        view.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: leading).isActive = true
+        view.topAnchor.constraint(equalTo: superview.topAnchor, constant: top).isActive = true
+        view.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -trailing).isActive = true
+        view.bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -bottom).isActive = true
     }
     
 }
