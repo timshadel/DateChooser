@@ -7,6 +7,11 @@
 
 import UIKit
 
+public protocol DateChooserDelegate: class {
+    func dateChanged(to date: Date?)
+    func dateChooserSaved()
+}
+
 @IBDesignable open class DateChooser: UIView {
     
     // MARK: - IB Inspectable properties
@@ -81,6 +86,7 @@ import UIKit
     // MARK: - Public properties
     
     open var chosenDate: Date?
+    public weak var delegate: DateChooserDelegate?
     
     
     // MARK: - Computed properties
@@ -93,6 +99,7 @@ import UIKit
     // MARK: - Internal properties
     
     let title = UILabel()
+    let segmentedContainer = UIView()
     let segmentedControl = UISegmentedControl(items: [NSLocalizedString("Date", comment: "Title for date in segmented control"), NSLocalizedString("Time", comment: "Title for time in segmented control")])
     let datePicker = UIDatePicker()
     let removeDateBorder = UIView()
@@ -136,24 +143,31 @@ import UIKit
     // MARK: - Internal functions
     
     func updateDatePicker() {
-        let temp = 4
+        guard computedCapabilities.contains(.dateAndTimeSeparate) else { return }
+        datePicker.datePickerMode = segmentedControl.selectedSegmentIndex == 0 ? .date : .time
+        datePicker.minuteInterval = minuteInterval
     }
     
     func dateChanged() {
-        let temp = 3
         updateDate()
+        delegate?.dateChanged(to: datePicker.date)
     }
     
     func removeDate() {
-        let temp = 4
+        datePicker.date = Date()
+        title.text = nil
+        delegate?.dateChanged(to: nil)
     }
     
     func setDateToCurrent() {
-        let temp = 2
+        let now = Date()
+        datePicker.date = now
+        updateDate()
+        delegate?.dateChanged(to: now)
     }
     
     func saveChanges() {
-        let temp = 3
+        delegate?.dateChooserSaved()
     }
     
 }
@@ -175,8 +189,8 @@ private extension DateChooser {
         constrainFullWidth(title, leading: DateChooser.innerMargin, trailing: DateChooser.innerMargin)
         stackView.addArrangedSubview(titleContainer)
         title.font = titleFont
+        title.textAlignment = .center
         
-        let segmentedContainer = UIView()
         segmentedContainer.addSubview(segmentedControl)
         constrainFullWidth(segmentedControl, leading: DateChooser.innerMargin * 2, top: DateChooser.innerMargin, trailing: DateChooser.innerMargin * 2, bottom: DateChooser.innerMargin)
         stackView.addArrangedSubview(segmentedContainer)
@@ -184,7 +198,6 @@ private extension DateChooser {
         segmentedControl.selectedSegmentIndex = 1
         
         stackView.addArrangedSubview(datePicker)
-        updateDatePicker()
         datePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
         
         stackView.addArrangedSubview(removeDateBorder)
@@ -209,7 +222,6 @@ private extension DateChooser {
 
         updateColors()
         updateCapabilities()
-        updateDate()
     }
     
     func updateColors() {
@@ -232,6 +244,7 @@ private extension DateChooser {
         setToCurrentButton.isHidden = !includeCurrent
         let dateAndTimeSeparate = computedCapabilities.contains(.dateAndTimeSeparate)
         segmentedControl.isHidden = !dateAndTimeSeparate
+        segmentedContainer.isHidden = !dateAndTimeSeparate
         let currentButtonTitle: String
         if dateAndTimeSeparate {
             datePicker.datePickerMode = .time
@@ -255,6 +268,7 @@ private extension DateChooser {
             currentButtonTitle = NSLocalizedString("Set to current date", comment: "Button title to set date to current date")
         }
         setToCurrentButton.setTitle(currentButtonTitle, for: .normal)
+        updateDate()
     }
     
     func updateDate() {
