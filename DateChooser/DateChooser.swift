@@ -186,7 +186,7 @@ private extension DateChooser {
         
         let titleContainer = UIView()
         titleContainer.addSubview(title)
-        constrainFullWidth(title, leading: DateChooser.innerMargin, trailing: DateChooser.innerMargin)
+        constrainFullWidth(title, leading: DateChooser.innerMargin, top: DateChooser.innerMargin, trailing: DateChooser.innerMargin, bottom: DateChooser.innerMargin)
         stackView.addArrangedSubview(titleContainer)
         title.font = titleFont
         title.textAlignment = .center
