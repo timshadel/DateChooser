@@ -190,6 +190,7 @@ private extension DateChooser {
         stackView.addArrangedSubview(titleContainer)
         title.font = titleFont
         title.textAlignment = .center
+        title.setContentCompressionResistancePriority(800, for: .horizontal)
         
         segmentedContainer.addSubview(segmentedControl)
         constrainFullWidth(segmentedControl, leading: DateChooser.innerMargin * 2, top: DateChooser.innerMargin, trailing: DateChooser.innerMargin * 2, bottom: DateChooser.innerMargin)
