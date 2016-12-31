@@ -77,7 +77,8 @@ public protocol DateChooserDelegate: class {
     
     @IBInspectable open var startingDate: Date? {
         didSet {
-            datePicker.date = startingDate ?? Date()
+            var date = startingDate ?? Date()
+            datePicker.date = date.rounded(minutes: minuteInterval)
             updateDate()
         }
     }
@@ -154,13 +155,13 @@ public protocol DateChooserDelegate: class {
     }
     
     func removeDate() {
-        datePicker.date = Date()
+        datePicker.date = Date().rounded(minutes: minuteInterval)
         title.text = nil
         delegate?.dateChanged(to: nil)
     }
     
     func setDateToCurrent() {
-        let now = Date()
+        let now = Date().rounded(minutes: minuteInterval)
         datePicker.date = now
         updateDate()
         delegate?.dateChanged(to: now)

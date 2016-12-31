@@ -12,6 +12,7 @@
 		7057D7471E008CF000C383AF /* DateChooser.h in Headers */ = {isa = PBXBuildFile; fileRef = 7057D7391E008CF000C383AF /* DateChooser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7057D7511E008D4700C383AF /* DateChooser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7057D7501E008D4700C383AF /* DateChooser.swift */; };
 		7057D7531E00908500C383AF /* DateChooserCapabilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7057D7521E00908500C383AF /* DateChooserCapabilities.swift */; };
+		70F50C391E1814B400BE7EE5 /* Date+Rounded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F50C381E1814B400BE7EE5 /* Date+Rounded.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +34,7 @@
 		7057D7461E008CF000C383AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7057D7501E008D4700C383AF /* DateChooser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateChooser.swift; sourceTree = "<group>"; };
 		7057D7521E00908500C383AF /* DateChooserCapabilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateChooserCapabilities.swift; sourceTree = "<group>"; };
+		70F50C381E1814B400BE7EE5 /* Date+Rounded.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Rounded.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 				7057D7391E008CF000C383AF /* DateChooser.h */,
 				7057D7501E008D4700C383AF /* DateChooser.swift */,
 				7057D7521E00908500C383AF /* DateChooserCapabilities.swift */,
+				70F50C381E1814B400BE7EE5 /* Date+Rounded.swift */,
 				7057D73A1E008CF000C383AF /* Info.plist */,
 			);
 			path = DateChooser;
@@ -205,6 +208,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70F50C391E1814B400BE7EE5 /* Date+Rounded.swift in Sources */,
 				7057D7511E008D4700C383AF /* DateChooser.swift in Sources */,
 				7057D7531E00908500C383AF /* DateChooserCapabilities.swift in Sources */,
 			);
