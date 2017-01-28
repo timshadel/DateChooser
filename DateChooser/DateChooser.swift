@@ -9,6 +9,7 @@ import UIKit
 
 public protocol DateChooserDelegate: class {
     func dateChanged(to date: Date?)
+    func countdownDurationChanged(to duration: TimeInterval)
     func dateChooserSaved()
 }
 
@@ -83,6 +84,12 @@ public protocol DateChooserDelegate: class {
         }
     }
     
+    @IBInspectable open var startingCountdownDuration: TimeInterval = 0.0 {
+        didSet {
+            datePicker.countDownDuration = startingCountdownDuration
+        }
+    }
+    
     
     // MARK: - Public properties
     
@@ -152,6 +159,7 @@ public protocol DateChooserDelegate: class {
     func dateChanged() {
         updateDate()
         delegate?.dateChanged(to: datePicker.date)
+        delegate?.countdownDurationChanged(to: datePicker.countDownDuration)
     }
     
     func removeDate() {
@@ -247,6 +255,7 @@ private extension DateChooser {
         let dateAndTimeSeparate = computedCapabilities.contains(.dateAndTimeSeparate)
         segmentedControl.isHidden = !dateAndTimeSeparate
         segmentedContainer.isHidden = !dateAndTimeSeparate
+        title.isHidden = computedCapabilities.contains(.countdown)
         let currentButtonTitle: String
         if dateAndTimeSeparate {
             datePicker.datePickerMode = .time
@@ -263,6 +272,9 @@ private extension DateChooser {
             dateFormatter.timeStyle = .short
             dateFormatter.dateStyle = .full
             currentButtonTitle = NSLocalizedString("Set to current date/time", comment: "Button title to set date to current date and time")
+        } else if computedCapabilities.contains(.countdown) {
+            datePicker.datePickerMode = .countDownTimer
+            currentButtonTitle = ""
         } else {
             datePicker.datePickerMode = .date
             dateFormatter.timeStyle = .none
