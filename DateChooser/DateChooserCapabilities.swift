@@ -22,6 +22,7 @@ public struct DateChooserCapabilities: OptionSet {
     public static let dateOnly = DateChooserCapabilities(rawValue: 16)
     public static let timeOnly = DateChooserCapabilities(rawValue: 32)
     public static let countdown = DateChooserCapabilities(rawValue: 64)
+    public static let cancel = DateChooserCapabilities(rawValue: 128)
     
     public static let standard: DateChooserCapabilities = [.setToCurrent, .removeDate, .dateAndTimeSeparate]
     

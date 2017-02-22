@@ -10,7 +10,8 @@ import UIKit
 public protocol DateChooserDelegate: class {
     func dateChanged(to date: Date?)
     func countdownDurationChanged(to duration: TimeInterval)
-    func dateChooserSaved()
+    func dateChooserSaved(with date: Date?, duration: TimeInterval)
+    func dateChooserCancelled()
 }
 
 @IBDesignable open class DateChooser: UIView {
@@ -90,6 +91,12 @@ public protocol DateChooserDelegate: class {
         }
     }
     
+    @IBInspectable open var removeButtonTitle: String = NSLocalizedString("Remove date", comment: "Button title to remove date") {
+        didSet {
+            removeDateButton.setTitle(removeButtonTitle, for: .normal)
+        }
+    }
+    
     
     // MARK: - Public properties
     
@@ -114,6 +121,8 @@ public protocol DateChooserDelegate: class {
     let removeDateButton = UIButton(type: .system)
     let currentBorder = UIView()
     let setToCurrentButton = UIButton(type: .system)
+    let cancelBorder = UIView()
+    let cancelButton = UIButton(type: .system)
     let saveBorder = UIView()
     let saveButton = UIButton(type: .system)
     let stackView = UIStackView()
@@ -175,8 +184,12 @@ public protocol DateChooserDelegate: class {
         delegate?.dateChanged(to: now)
     }
     
+    func cancelChanges() {
+        delegate?.dateChooserCancelled()
+    }
+    
     func saveChanges() {
-        delegate?.dateChooserSaved()
+        delegate?.dateChooserSaved(with: datePicker.date, duration: datePicker.countDownDuration)
     }
     
 }
@@ -222,6 +235,13 @@ private extension DateChooser {
         stackView.addArrangedSubview(setToCurrentButton)
         setToCurrentButton.addTarget(self, action: #selector(setDateToCurrent), for: .touchUpInside)
         setToCurrentButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight).isActive = true
+        
+        stackView.addArrangedSubview(cancelBorder)
+        cancelBorder.heightAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight).isActive = true
+        stackView.addArrangedSubview(cancelButton)
+        cancelButton.addTarget(self, action: #selector(cancelChanges), for: .touchUpInside)
+        cancelButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight).isActive = true
+        cancelButton.setTitle(NSLocalizedString("Cancel", comment: "Cancel button title"), for: .normal)
 
         stackView.addArrangedSubview(saveBorder)
         saveBorder.heightAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight).isActive = true
@@ -246,9 +266,12 @@ private extension DateChooser {
     }
     
     func updateCapabilities() {
-        let includeRemoveData = computedCapabilities.contains(.removeDate)
-        removeDateBorder.isHidden = !includeRemoveData
-        removeDateButton.isHidden = !includeRemoveData
+        let includeRemoveDate = computedCapabilities.contains(.removeDate)
+        removeDateBorder.isHidden = !includeRemoveDate
+        removeDateButton.isHidden = !includeRemoveDate
+        let includeCancel = computedCapabilities.contains(.cancel)
+        cancelBorder.isHidden = !includeCancel
+        cancelButton.isHidden = !includeCancel
         let includeCurrent = computedCapabilities.contains(.setToCurrent)
         currentBorder.isHidden = !includeCurrent
         setToCurrentButton.isHidden = !includeCurrent
