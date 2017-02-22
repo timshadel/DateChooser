@@ -236,19 +236,25 @@ private extension DateChooser {
         setToCurrentButton.addTarget(self, action: #selector(setDateToCurrent), for: .touchUpInside)
         setToCurrentButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight).isActive = true
         
-        stackView.addArrangedSubview(cancelBorder)
-        cancelBorder.heightAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight).isActive = true
-        stackView.addArrangedSubview(cancelButton)
-        cancelButton.addTarget(self, action: #selector(cancelChanges), for: .touchUpInside)
-        cancelButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight).isActive = true
-        cancelButton.setTitle(NSLocalizedString("Cancel", comment: "Cancel button title"), for: .normal)
-
         stackView.addArrangedSubview(saveBorder)
         saveBorder.heightAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight).isActive = true
-        stackView.addArrangedSubview(saveButton)
+        
+        let saveCancelContainer = UIStackView()
+        stackView.addArrangedSubview(saveCancelContainer)
+        saveCancelContainer.axis = .horizontal
+        saveCancelContainer.addArrangedSubview(cancelButton)
+        cancelButton.addTarget(self, action: #selector(cancelChanges), for: .touchUpInside)
+        cancelButton.setTitle(NSLocalizedString("Cancel", comment: "Cancel button title"), for: .normal)
+        saveCancelContainer.addArrangedSubview(cancelBorder)
+        cancelBorder.widthAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight).isActive = true
+
+        saveCancelContainer.addArrangedSubview(saveButton)
         saveButton.addTarget(self, action: #selector(saveChanges), for: .touchUpInside)
         saveButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight).isActive = true
         saveButton.setTitle(NSLocalizedString("Save", comment: "Save button title"), for: .normal)
+        let buttonWidth = cancelButton.widthAnchor.constraint(equalTo: saveButton.widthAnchor)
+        buttonWidth.priority = 999
+        buttonWidth.isActive = true
 
         updateColors()
         updateCapabilities()
@@ -263,6 +269,7 @@ private extension DateChooser {
         removeDateBorder.backgroundColor = innerBorderColor
         currentBorder.backgroundColor = innerBorderColor
         saveBorder.backgroundColor = innerBorderColor
+        cancelBorder.backgroundColor = innerBorderColor
     }
     
     func updateCapabilities() {
