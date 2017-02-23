@@ -192,6 +192,17 @@ public protocol DateChooserDelegate: class {
         delegate?.dateChooserSaved(with: datePicker.date, duration: datePicker.countDownDuration)
     }
     
+    func toggleMinuteInterval() {
+        if datePicker.minuteInterval == minuteInterval {
+            datePicker.minuteInterval = 1
+        } else {
+            datePicker.minuteInterval = minuteInterval
+            datePicker.date = datePicker.date.rounded(minutes: minuteInterval)
+            updateDate()
+            delegate?.dateChanged(to: datePicker.date)
+        }
+    }
+    
 }
 
 
@@ -222,6 +233,9 @@ private extension DateChooser {
         
         stackView.addArrangedSubview(datePicker)
         datePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(toggleMinuteInterval))
+        doubleTap.numberOfTapsRequired = 2
+        datePicker.addGestureRecognizer(doubleTap)
         
         stackView.addArrangedSubview(removeDateBorder)
         removeDateBorder.heightAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight).isActive = true
