@@ -244,18 +244,26 @@ private extension DateChooser {
         datePicker.accessibilityIdentifier = "DateChooser.datePicker"
 
         stackView.addArrangedSubview(removeDateBorder)
-        removeDateBorder.heightAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight).isActive = true
+        let removeDateBorderHeight = removeDateBorder.heightAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight)
+        removeDateBorderHeight.priority = 999
+        removeDateBorderHeight.isActive = true
         stackView.addArrangedSubview(removeDateButton)
         removeDateButton.addTarget(self, action: #selector(removeDate), for: .touchUpInside)
-        removeDateButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight).isActive = true
+        let removeDateButtonHeight = removeDateButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight)
+        removeDateButtonHeight.priority = 999
+        removeDateButtonHeight.isActive = true
         removeDateButton.setTitle(NSLocalizedString("Remove date", comment: "Button title to remove date"), for: .normal)
         removeDateButton.accessibilityIdentifier = "DateChooser.removeDateButton"
 
         stackView.addArrangedSubview(currentBorder)
-        currentBorder.heightAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight).isActive = true
+        let currentBorderHeight = currentBorder.heightAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight)
+        currentBorderHeight.priority = 999
+        currentBorderHeight.isActive = true
         stackView.addArrangedSubview(setToCurrentButton)
         setToCurrentButton.addTarget(self, action: #selector(setDateToCurrent), for: .touchUpInside)
-        setToCurrentButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight).isActive = true
+        let currentButtonHeight = setToCurrentButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight)
+        currentButtonHeight.priority = 999
+        currentButtonHeight.isActive = true
         setToCurrentButton.accessibilityIdentifier = "DateChooser.currentButton"
 
         stackView.addArrangedSubview(saveBorder)
