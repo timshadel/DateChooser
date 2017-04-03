@@ -82,6 +82,9 @@ public protocol DateChooserDelegate: class {
             let date = startingDate ?? Date()
             datePicker.date = date.rounded(minutes: minuteInterval)
             updateDate()
+            if datePicker.date != startingDate {
+                dateChanged()
+            }
         }
     }
     
