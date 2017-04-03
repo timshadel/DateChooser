@@ -12,7 +12,7 @@
         <!--Date Chooser View Controller-->
         <scene sceneID="D2L-yz-18v">
             <objects>
-                <viewController storyboardIdentifier="DateChooserViewController" id="dkd-M6-D7Q" customClass="DateChooserViewController" customModule="DateChooser" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DateChooserViewController" modalTransitionStyle="crossDissolve" modalPresentationStyle="overFullScreen" id="dkd-M6-D7Q" customClass="DateChooserViewController" customModule="DateChooser" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="BL3-nH-gDp"/>
                         <viewControllerLayoutGuide type="bottom" id="5pO-bf-JxI"/>
