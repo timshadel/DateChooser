@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="dkd-M6-D7Q">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Date Chooser View Controller-->
+        <scene sceneID="D2L-yz-18v">
+            <objects>
+                <viewController storyboardIdentifier="DateChooserViewController" id="dkd-M6-D7Q" customClass="DateChooserViewController" customModule="DateChooser" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="BL3-nH-gDp"/>
+                        <viewControllerLayoutGuide type="bottom" id="5pO-bf-JxI"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="tGa-ww-c8M">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dQL-Kj-aEY" customClass="DateChooser" customModule="DateChooser">
+                                <rect key="frame" x="27.5" y="114" width="320" height="439.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" priority="999" constant="320" id="WhF-A4-LJe"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="minuteInterval">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.30196078430000001" green="0.30196078430000001" blue="0.30196078430000001" alpha="0.69604656040000001" colorSpace="calibratedRGB"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="dQL-Kj-aEY" firstAttribute="top" relation="greaterThanOrEqual" secondItem="tGa-ww-c8M" secondAttribute="topMargin" constant="8" id="AMU-wZ-Prx"/>
+                            <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="dQL-Kj-aEY" secondAttribute="trailing" constant="8" id="IA6-kn-hec"/>
+                            <constraint firstItem="dQL-Kj-aEY" firstAttribute="centerX" secondItem="tGa-ww-c8M" secondAttribute="centerX" id="LA9-Ls-iby"/>
+                            <constraint firstItem="dQL-Kj-aEY" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="tGa-ww-c8M" secondAttribute="leadingMargin" constant="8" id="eIl-cd-PY7"/>
+                            <constraint firstItem="dQL-Kj-aEY" firstAttribute="centerY" secondItem="tGa-ww-c8M" secondAttribute="centerY" id="iRB-Md-Zfg"/>
+                            <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="dQL-Kj-aEY" secondAttribute="bottom" constant="8" id="sxi-JJ-Cu7"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="dVk-9V-PFE" appends="YES" id="dX2-c6-ok2"/>
+                        </connections>
+                    </view>
+                    <connections>
+                        <outlet property="dateChooser" destination="dQL-Kj-aEY" id="fVM-t4-eVI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2eP-i2-OMd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="dVk-9V-PFE">
+                    <connections>
+                        <action selector="backgroundTapped" destination="dkd-M6-D7Q" id="kRx-pc-LZ7"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="41" y="79"/>
+        </scene>
+    </scenes>
+</document>
