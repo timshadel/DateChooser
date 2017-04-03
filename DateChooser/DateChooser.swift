@@ -79,7 +79,7 @@ public protocol DateChooserDelegate: class {
     
     @IBInspectable open var startingDate: Date? {
         didSet {
-            var date = startingDate ?? Date()
+            let date = startingDate ?? Date()
             datePicker.date = date.rounded(minutes: minuteInterval)
             updateDate()
         }
