@@ -227,32 +227,37 @@ private extension DateChooser {
         title.font = titleFont
         title.textAlignment = .center
         title.setContentCompressionResistancePriority(800, for: .horizontal)
-        
+        title.accessibilityIdentifier = "DateChooser.title"
+
         segmentedContainer.addSubview(segmentedControl)
         constrainFullWidth(segmentedControl, leading: DateChooser.innerMargin * 2, top: DateChooser.innerMargin, trailing: DateChooser.innerMargin * 2, bottom: DateChooser.innerMargin)
         stackView.addArrangedSubview(segmentedContainer)
         segmentedControl.addTarget(self, action: #selector(updateDatePicker), for: .valueChanged)
         segmentedControl.selectedSegmentIndex = 1
-        
+        segmentedControl.accessibilityIdentifier = "DateChooser.segmentedControl"
+
         stackView.addArrangedSubview(datePicker)
         datePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(toggleMinuteInterval))
         doubleTap.numberOfTapsRequired = 2
         datePicker.addGestureRecognizer(doubleTap)
-        
+        datePicker.accessibilityIdentifier = "DateChooser.datePicker"
+
         stackView.addArrangedSubview(removeDateBorder)
         removeDateBorder.heightAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight).isActive = true
         stackView.addArrangedSubview(removeDateButton)
         removeDateButton.addTarget(self, action: #selector(removeDate), for: .touchUpInside)
         removeDateButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight).isActive = true
         removeDateButton.setTitle(NSLocalizedString("Remove date", comment: "Button title to remove date"), for: .normal)
+        removeDateButton.accessibilityIdentifier = "DateChooser.removeDateButton"
 
         stackView.addArrangedSubview(currentBorder)
         currentBorder.heightAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight).isActive = true
         stackView.addArrangedSubview(setToCurrentButton)
         setToCurrentButton.addTarget(self, action: #selector(setDateToCurrent), for: .touchUpInside)
         setToCurrentButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight).isActive = true
-        
+        setToCurrentButton.accessibilityIdentifier = "DateChooser.currentButton"
+
         stackView.addArrangedSubview(saveBorder)
         saveBorder.heightAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight).isActive = true
         
@@ -262,6 +267,7 @@ private extension DateChooser {
         saveCancelContainer.addArrangedSubview(cancelButton)
         cancelButton.addTarget(self, action: #selector(cancelChanges), for: .touchUpInside)
         cancelButton.setTitle(NSLocalizedString("Cancel", comment: "Cancel button title"), for: .normal)
+        cancelButton.accessibilityIdentifier = "DateChooser.cancelButton"
         saveCancelContainer.addArrangedSubview(cancelBorder)
         cancelBorder.widthAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight).isActive = true
 
@@ -269,6 +275,7 @@ private extension DateChooser {
         saveButton.addTarget(self, action: #selector(saveChanges), for: .touchUpInside)
         saveButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight).isActive = true
         saveButton.setTitle(NSLocalizedString("Save", comment: "Save button title"), for: .normal)
+        saveButton.accessibilityIdentifier = "DateChooser.saveButton"
         let buttonWidth = cancelButton.widthAnchor.constraint(equalTo: saveButton.widthAnchor)
         buttonWidth.priority = 999
         buttonWidth.isActive = true
