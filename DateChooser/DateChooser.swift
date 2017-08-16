@@ -105,6 +105,14 @@ public protocol DateChooserDelegate: class {
     
     open var chosenDate: Date?
     public weak var delegate: DateChooserDelegate?
+    public var programmaticCapabilities: DateChooserCapabilities {
+        get {
+            return DateChooserCapabilities(rawValue: capabilities)
+        }
+        set {
+            capabilities = newValue.rawValue
+        }
+    }
     
     
     // MARK: - Computed properties
