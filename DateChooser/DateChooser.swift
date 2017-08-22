@@ -302,6 +302,7 @@ private extension DateChooser {
     
     func updateColors() {
         title.textColor = titleColor
+        datePicker.setValue(titleColor, forKey: "textColor")
         segmentedControl.tintColor = tintColor
         removeDateButton.tintColor = destructiveColor
         setToCurrentButton.tintColor = neutralColor
