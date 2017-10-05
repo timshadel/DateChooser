@@ -27,6 +27,12 @@ public protocol DateChooserDelegate: class {
         }
     }
     
+    @IBInspectable open var background: UIColor = .white {
+        didSet {
+            updateColors()
+        }
+    }
+    
     @IBInspectable open var titleColor: UIColor = .black {
         didSet {
             updateColors()
@@ -100,6 +106,12 @@ public protocol DateChooserDelegate: class {
         }
     }
     
+    @IBInspectable open var blurEffectStyle: UIBlurEffectStyle = .extraLight {
+        didSet {
+            updateBlur()
+        }
+    }
+    
     
     // MARK: - Public properties
     
@@ -142,6 +154,8 @@ public protocol DateChooserDelegate: class {
     // MARK: - Private properties
     
     fileprivate lazy var dateFormatter = DateFormatter()
+    fileprivate let backgroundView = UIView()
+    fileprivate let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
     
     
     // MARK: - Constants
@@ -214,6 +228,14 @@ public protocol DateChooserDelegate: class {
         }
     }
     
+    func buttonTouchBegan(_ button: UIButton) {
+        button.backgroundColor = .clear
+    }
+    
+    func buttonTouchEnded(_ button: UIButton) {
+        button.backgroundColor = background
+    }
+    
 }
 
 
@@ -222,6 +244,17 @@ public protocol DateChooserDelegate: class {
 private extension DateChooser {
     
     func setupViews() {
+        clipsToBounds = true
+        addSubview(backgroundView)
+        backgroundView.translatesAutoresizingMaskIntoConstraints = false
+        backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        backgroundView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        backgroundView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        addSubview(blurView)
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        blurView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        blurView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        blurView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         addSubview(stackView)
         constrainFullWidth(stackView, top: DateChooser.innerMargin)
         stackView.axis = .vertical
@@ -250,6 +283,8 @@ private extension DateChooser {
         doubleTap.numberOfTapsRequired = 2
         datePicker.addGestureRecognizer(doubleTap)
         datePicker.accessibilityIdentifier = "DateChooser.datePicker"
+        backgroundView.bottomAnchor.constraint(equalTo: datePicker.bottomAnchor).isActive = true
+        blurView.topAnchor.constraint(equalTo: datePicker.bottomAnchor).isActive = true
 
         stackView.addArrangedSubview(removeDateBorder)
         let removeDateBorderHeight = removeDateBorder.heightAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight)
@@ -257,6 +292,7 @@ private extension DateChooser {
         removeDateBorderHeight.isActive = true
         stackView.addArrangedSubview(removeDateButton)
         removeDateButton.addTarget(self, action: #selector(removeDate), for: .touchUpInside)
+        addTouchHandlers(to: removeDateButton)
         let removeDateButtonHeight = removeDateButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight)
         removeDateButtonHeight.priority = 999
         removeDateButtonHeight.isActive = true
@@ -269,6 +305,7 @@ private extension DateChooser {
         currentBorderHeight.isActive = true
         stackView.addArrangedSubview(setToCurrentButton)
         setToCurrentButton.addTarget(self, action: #selector(setDateToCurrent), for: .touchUpInside)
+        addTouchHandlers(to: setToCurrentButton)
         let currentButtonHeight = setToCurrentButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight)
         currentButtonHeight.priority = 999
         currentButtonHeight.isActive = true
@@ -282,6 +319,7 @@ private extension DateChooser {
         saveCancelContainer.axis = .horizontal
         saveCancelContainer.addArrangedSubview(cancelButton)
         cancelButton.addTarget(self, action: #selector(cancelChanges), for: .touchUpInside)
+        addTouchHandlers(to: cancelButton)
         cancelButton.setTitle(NSLocalizedString("Cancel", comment: "Cancel button title"), for: .normal)
         cancelButton.accessibilityIdentifier = "DateChooser.cancelButton"
         saveCancelContainer.addArrangedSubview(cancelBorder)
@@ -289,6 +327,7 @@ private extension DateChooser {
 
         saveCancelContainer.addArrangedSubview(saveButton)
         saveButton.addTarget(self, action: #selector(saveChanges), for: .touchUpInside)
+        addTouchHandlers(to: saveButton)
         saveButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight).isActive = true
         saveButton.setTitle(NSLocalizedString("Save", comment: "Save button title"), for: .normal)
         saveButton.accessibilityIdentifier = "DateChooser.saveButton"
@@ -301,16 +340,25 @@ private extension DateChooser {
     }
     
     func updateColors() {
+        backgroundView.backgroundColor = background
         title.textColor = titleColor
         datePicker.setValue(titleColor, forKey: "textColor")
         segmentedControl.tintColor = tintColor
         removeDateButton.tintColor = destructiveColor
+        removeDateButton.backgroundColor = background
         setToCurrentButton.tintColor = neutralColor
+        setToCurrentButton.backgroundColor = background
         saveButton.tintColor = tintColor
+        saveButton.backgroundColor = background
+        cancelButton.backgroundColor = background
         removeDateBorder.backgroundColor = innerBorderColor
         currentBorder.backgroundColor = innerBorderColor
         saveBorder.backgroundColor = innerBorderColor
         cancelBorder.backgroundColor = innerBorderColor
+    }
+    
+    func updateBlur() {
+        blurView.effect = UIBlurEffect(style: blurEffectStyle)
     }
     
     func updateCapabilities() {
@@ -367,6 +415,12 @@ private extension DateChooser {
         view.topAnchor.constraint(equalTo: superview.topAnchor, constant: top).isActive = true
         view.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -trailing).isActive = true
         view.bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -bottom).isActive = true
+    }
+    
+    func addTouchHandlers(to button: UIButton) {
+        button.addTarget(self, action: #selector(buttonTouchBegan(_:)), for: .touchDown)
+        button.addTarget(self, action: #selector(buttonTouchEnded(_:)), for: .touchDragExit)
+        button.addTarget(self, action: #selector(buttonTouchEnded(_:)), for: .touchUpInside)
     }
     
 }
