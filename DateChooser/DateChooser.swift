@@ -86,11 +86,10 @@ public protocol DateChooserDelegate: class {
     @IBInspectable open var startingDate: Date? {
         didSet {
             let date = startingDate ?? Date()
-            datePicker.date = date.rounded(minutes: minuteInterval)
+            let adjustedDate = date.rounded(minutes: minuteInterval)
+            self.date = adjustedDate
+            datePicker.date = adjustedDate
             updateDate()
-            if datePicker.date != startingDate {
-                dateChanged()
-            }
         }
     }
     
@@ -156,6 +155,7 @@ public protocol DateChooserDelegate: class {
     fileprivate lazy var dateFormatter = DateFormatter()
     fileprivate let backgroundView = UIView()
     fileprivate let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
+    fileprivate var date: Date?
     
     
     // MARK: - Constants
@@ -191,22 +191,22 @@ public protocol DateChooserDelegate: class {
     }
     
     func dateChanged() {
+        date = datePicker.date
         updateDate()
-        delegate?.dateChanged(to: datePicker.date)
         delegate?.countdownDurationChanged(to: datePicker.countDownDuration)
     }
     
     func removeDate() {
+        date = nil
         datePicker.date = Date().rounded(minutes: minuteInterval)
-        title.text = nil
-        delegate?.dateChanged(to: nil)
+        updateDate()
     }
     
     func setDateToCurrent() {
         let now = Date().rounded(minutes: minuteInterval)
+        date = now
         datePicker.date = now
         updateDate()
-        delegate?.dateChanged(to: now)
     }
     
     func cancelChanges() {
@@ -214,7 +214,7 @@ public protocol DateChooserDelegate: class {
     }
     
     func saveChanges() {
-        delegate?.dateChooserSaved(with: datePicker.date, duration: datePicker.countDownDuration)
+        delegate?.dateChooserSaved(with: date, duration: datePicker.countDownDuration)
     }
     
     func toggleMinuteInterval() {
@@ -405,7 +405,12 @@ private extension DateChooser {
     }
     
     func updateDate() {
-        title.text = dateFormatter.string(from: datePicker.date)
+        if let date = date {
+            title.text = dateFormatter.string(from: date)
+        } else {
+            title.text = nil
+        }
+        delegate?.dateChanged(to: date)
     }
     
     func constrainFullWidth(_ view: UIView, leading: CGFloat = 0, top: CGFloat = 0, trailing: CGFloat = 0, bottom: CGFloat = 0) {
