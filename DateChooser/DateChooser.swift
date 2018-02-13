@@ -161,6 +161,7 @@ public protocol DateChooserDelegate: class {
     // MARK: - Private properties
     
     fileprivate lazy var dateFormatter = DateFormatter()
+    fileprivate lazy var timeFormatter = DateFormatter()
     fileprivate let backgroundView = UIView()
     fileprivate let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
     fileprivate var date: Date?
@@ -399,6 +400,8 @@ private extension DateChooser {
             datePicker.datePickerMode = .time
             dateFormatter.timeStyle = .short
             dateFormatter.dateStyle = .full
+            timeFormatter.timeStyle = .short
+            timeFormatter.dateStyle = .none
             currentButtonTitle = NSLocalizedString("Set to current date/time", comment: "Button title to set date to current date and time")
         } else if computedCapabilities.contains(.timeOnly) {
             datePicker.datePickerMode = .time
@@ -424,12 +427,20 @@ private extension DateChooser {
     }
     
     func updateDate() {
-        if let date = date {
-            title.text = dateFormatter.string(from: date)
+        if let _ = date {
+            title.text = adjustedDateTitle()
         } else {
             title.text = nil
         }
         delegate?.dateChanged(to: date)
+    }
+    
+    func adjustedDateTitle() -> String? {
+        guard let date = date else { return nil }
+        if let relativeDay = date.relativeDayString {
+            return String.localizedStringWithFormat(NSLocalizedString("%@ at %@", comment: "Format string for relative date. First parameter is relative day. Second parameter is time. E.g. Yesterday at 11:30 AM"), relativeDay, timeFormatter.string(from: date))
+        }
+        return dateFormatter.string(from: date)
     }
     
     func constrainFullWidth(_ view: UIView, leading: CGFloat = 0, top: CGFloat = 0, trailing: CGFloat = 0, bottom: CGFloat = 0) {
@@ -445,6 +456,32 @@ private extension DateChooser {
         button.addTarget(self, action: #selector(buttonTouchBegan(_:)), for: .touchDown)
         button.addTarget(self, action: #selector(buttonTouchEnded(_:)), for: .touchDragExit)
         button.addTarget(self, action: #selector(buttonTouchEnded(_:)), for: .touchUpInside)
+    }
+    
+}
+
+
+private extension Date {
+    
+    var relativeDayString: String? {
+        let now = Date()
+        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: now)
+        if isSameDay(as: yesterday) {
+            return NSLocalizedString("Yesterday", comment: "Relative date string for previous day")
+        }
+        if isSameDay(as: now) {
+            return NSLocalizedString("Today", comment: "Relative date string for current day")
+        }
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: now)
+        if isSameDay(as: tomorrow) {
+            return NSLocalizedString("Tomorrow", comment: "Relative date string for next day")
+        }
+        return nil
+    }
+    
+    func isSameDay(as date: Date?) -> Bool {
+        guard let date = date else { return false }
+        return Calendar.current.isDate(date, inSameDayAs: self)
     }
     
 }
