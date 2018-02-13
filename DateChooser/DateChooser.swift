@@ -284,6 +284,9 @@ private extension DateChooser {
         title.font = titleFont
         title.textAlignment = .center
         title.setContentCompressionResistancePriority(800, for: .horizontal)
+        title.adjustsFontSizeToFitWidth = true
+        title.minimumScaleFactor = 0.7
+        title.allowsDefaultTighteningForTruncation = true
         title.accessibilityIdentifier = "DateChooser.title"
 
         segmentedContainer.addSubview(segmentedControl)
