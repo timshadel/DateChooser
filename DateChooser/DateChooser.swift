@@ -16,6 +16,14 @@ public protocol DateChooserDelegate: class {
 
 @IBDesignable open class DateChooser: UIView {
     
+    // MARK: - Enums
+    
+    public enum DateMode: Int {
+        case date
+        case time
+    }
+    
+    
     // MARK: - IB Inspectable properties
     
     @IBInspectable open var cornerRadius: CGFloat {
@@ -182,6 +190,14 @@ public protocol DateChooserDelegate: class {
     }
     
     
+    // MARK: - Public functions
+    
+    public func change(to dateMode: DateMode) {
+        segmentedControl.selectedSegmentIndex = dateMode.rawValue
+        updateDatePicker()
+    }
+    
+    
     // MARK: - Internal functions
     
     func updateDatePicker() {
@@ -274,7 +290,7 @@ private extension DateChooser {
         constrainFullWidth(segmentedControl, leading: DateChooser.innerMargin * 2, top: DateChooser.innerMargin, trailing: DateChooser.innerMargin * 2, bottom: DateChooser.innerMargin)
         stackView.addArrangedSubview(segmentedContainer)
         segmentedControl.addTarget(self, action: #selector(updateDatePicker), for: .valueChanged)
-        segmentedControl.selectedSegmentIndex = 1
+        segmentedControl.selectedSegmentIndex = 0
         segmentedControl.accessibilityIdentifier = "DateChooser.segmentedControl"
 
         stackView.addArrangedSubview(datePicker)
