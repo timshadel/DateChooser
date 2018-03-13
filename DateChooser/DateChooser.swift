@@ -201,40 +201,40 @@ public protocol DateChooserDelegate: class {
     
     // MARK: - Internal functions
     
-    func updateDatePicker() {
+    @objc func updateDatePicker() {
         guard computedCapabilities.contains(.dateAndTimeSeparate) else { return }
         datePicker.datePickerMode = segmentedControl.selectedSegmentIndex == 0 ? .date : .time
         datePicker.minuteInterval = minuteInterval
     }
     
-    func dateChanged() {
+    @objc func dateChanged() {
         date = datePicker.date
         updateDate()
         delegate?.countdownDurationChanged(to: datePicker.countDownDuration)
     }
     
-    func removeDate() {
+    @objc func removeDate() {
         date = nil
         datePicker.date = Date().rounded(minutes: minuteInterval)
         updateDate()
     }
     
-    func setDateToCurrent() {
+    @objc func setDateToCurrent() {
         let now = Date().rounded(minutes: minuteInterval)
         date = now
         datePicker.date = now
         updateDate()
     }
     
-    func cancelChanges() {
+    @objc func cancelChanges() {
         delegate?.dateChooserCancelled()
     }
     
-    func saveChanges() {
+    @objc func saveChanges() {
         delegate?.dateChooserSaved(with: date, duration: datePicker.countDownDuration)
     }
     
-    func toggleMinuteInterval() {
+    @objc func toggleMinuteInterval() {
         if datePicker.minuteInterval == minuteInterval {
             datePicker.minuteInterval = 1
         } else {
@@ -245,11 +245,11 @@ public protocol DateChooserDelegate: class {
         }
     }
     
-    func buttonTouchBegan(_ button: UIButton) {
+    @objc func buttonTouchBegan(_ button: UIButton) {
         button.backgroundColor = .clear
     }
     
-    func buttonTouchEnded(_ button: UIButton) {
+    @objc func buttonTouchEnded(_ button: UIButton) {
         button.backgroundColor = background
     }
     
@@ -284,7 +284,7 @@ private extension DateChooser {
         stackView.addArrangedSubview(titleContainer)
         title.font = titleFont
         title.textAlignment = .center
-        title.setContentCompressionResistancePriority(800, for: .horizontal)
+        title.setContentCompressionResistancePriority(UILayoutPriority(rawValue: 800), for: .horizontal)
         title.adjustsFontSizeToFitWidth = true
         title.minimumScaleFactor = 0.7
         title.allowsDefaultTighteningForTruncation = true
@@ -308,26 +308,26 @@ private extension DateChooser {
 
         stackView.addArrangedSubview(removeDateBorder)
         let removeDateBorderHeight = removeDateBorder.heightAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight)
-        removeDateBorderHeight.priority = 999
+        removeDateBorderHeight.priority = UILayoutPriority(rawValue: 999)
         removeDateBorderHeight.isActive = true
         stackView.addArrangedSubview(removeDateButton)
         removeDateButton.addTarget(self, action: #selector(removeDate), for: .touchUpInside)
         addTouchHandlers(to: removeDateButton)
         let removeDateButtonHeight = removeDateButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight)
-        removeDateButtonHeight.priority = 999
+        removeDateButtonHeight.priority = UILayoutPriority(rawValue: 999)
         removeDateButtonHeight.isActive = true
         removeDateButton.setTitle(NSLocalizedString("Remove date", comment: "Button title to remove date"), for: .normal)
         removeDateButton.accessibilityIdentifier = "DateChooser.removeDateButton"
 
         stackView.addArrangedSubview(currentBorder)
         let currentBorderHeight = currentBorder.heightAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight)
-        currentBorderHeight.priority = 999
+        currentBorderHeight.priority = UILayoutPriority(rawValue: 999)
         currentBorderHeight.isActive = true
         stackView.addArrangedSubview(setToCurrentButton)
         setToCurrentButton.addTarget(self, action: #selector(setDateToCurrent), for: .touchUpInside)
         addTouchHandlers(to: setToCurrentButton)
         let currentButtonHeight = setToCurrentButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight)
-        currentButtonHeight.priority = 999
+        currentButtonHeight.priority = UILayoutPriority(rawValue: 999)
         currentButtonHeight.isActive = true
         setToCurrentButton.accessibilityIdentifier = "DateChooser.currentButton"
 
@@ -352,7 +352,7 @@ private extension DateChooser {
         saveButton.setTitle(NSLocalizedString("Save", comment: "Save button title"), for: .normal)
         saveButton.accessibilityIdentifier = "DateChooser.saveButton"
         let buttonWidth = cancelButton.widthAnchor.constraint(equalTo: saveButton.widthAnchor)
-        buttonWidth.priority = 999
+        buttonWidth.priority = UILayoutPriority(rawValue: 999)
         buttonWidth.isActive = true
 
         updateColors()
