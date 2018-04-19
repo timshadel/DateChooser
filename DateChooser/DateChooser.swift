@@ -101,6 +101,14 @@ public protocol DateChooserDelegate: class {
         }
     }
     
+    @IBInspectable open var dateMode: Int = 0 {
+        didSet {
+            guard dateMode != oldValue else { return }
+            segmentedControl.selectedSegmentIndex = dateMode
+            updateDatePicker()
+        }
+    }
+    
     @IBInspectable open var startingCountdownDuration: TimeInterval = 0.0 {
         didSet {
             datePicker.countDownDuration = startingCountdownDuration
@@ -138,6 +146,10 @@ public protocol DateChooserDelegate: class {
     
     var computedCapabilities: DateChooserCapabilities {
         return DateChooserCapabilities(rawValue: capabilities)
+    }
+    
+    var computedDateMode: DateMode {
+        return DateMode(rawValue: dateMode) ?? .date
     }
     
     
@@ -193,9 +205,8 @@ public protocol DateChooserDelegate: class {
     
     // MARK: - Public functions
     
-    public func change(to dateMode: DateMode) {
-        segmentedControl.selectedSegmentIndex = dateMode.rawValue
-        updateDatePicker()
+    public func change(to mode: DateMode) {
+        dateMode = mode.rawValue
     }
     
     
@@ -203,7 +214,8 @@ public protocol DateChooserDelegate: class {
     
     @objc func updateDatePicker() {
         guard computedCapabilities.contains(.dateAndTimeSeparate) else { return }
-        datePicker.datePickerMode = segmentedControl.selectedSegmentIndex == 0 ? .date : .time
+        dateMode = segmentedControl.selectedSegmentIndex
+        datePicker.datePickerMode = computedDateMode == .date ? .date : .time
         datePicker.minuteInterval = minuteInterval
     }
     
@@ -235,6 +247,9 @@ public protocol DateChooserDelegate: class {
     }
     
     @objc func toggleMinuteInterval() {
+        if computedCapabilities.contains(.dateAndTimeSeparate) && computedDateMode == .date {
+            return
+        }
         if datePicker.minuteInterval == minuteInterval {
             datePicker.minuteInterval = 1
         } else {
@@ -397,7 +412,7 @@ private extension DateChooser {
         title.isHidden = computedCapabilities.contains(.countdown)
         let currentButtonTitle: String
         if dateAndTimeSeparate {
-            datePicker.datePickerMode = .time
+            updateDatePicker()
             dateFormatter.timeStyle = .short
             dateFormatter.dateStyle = .full
             timeFormatter.timeStyle = .short
@@ -438,7 +453,7 @@ private extension DateChooser {
     func adjustedDateTitle() -> String? {
         guard let date = date else { return nil }
         if let relativeDay = date.relativeDayString {
-            return String.localizedStringWithFormat(NSLocalizedString("%@ at %@", comment: "Format string for relative date. First parameter is relative day. Second parameter is time. E.g. Yesterday at 11:30 AM"), relativeDay, timeFormatter.string(from: date))
+            return String.localizedStringWithFormat(NSLocalizedString("%@, %@", comment: "Format string for relative date. First parameter is relative day. Second parameter is time. E.g. Yesterday, 11:30 AM"), relativeDay, timeFormatter.string(from: date))
         }
         return dateFormatter.string(from: date)
     }
