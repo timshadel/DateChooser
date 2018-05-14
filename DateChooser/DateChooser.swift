@@ -91,6 +91,12 @@ public protocol DateChooserDelegate: class {
         }
     }
     
+    @IBInspectable open var emptyTitle: String? = nil {
+        didSet {
+            updateDate()
+        }
+    }
+    
     @IBInspectable open var startingDate: Date? {
         didSet {
             let date = startingDate ?? Date()
@@ -445,7 +451,7 @@ private extension DateChooser {
         if let _ = date {
             title.text = adjustedDateTitle()
         } else {
-            title.text = nil
+            title.text = emptyTitle
         }
         delegate?.dateChanged(to: date)
     }
