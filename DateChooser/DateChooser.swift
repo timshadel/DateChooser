@@ -41,6 +41,12 @@ public protocol DateChooserDelegate: class {
         }
     }
     
+    @IBInspectable open var buttonBackground: UIColor = .white {
+        didSet {
+            updateColors()
+        }
+    }
+    
     @IBInspectable open var titleColor: UIColor = .black {
         didSet {
             updateColors()
@@ -386,12 +392,12 @@ private extension DateChooser {
         datePicker.setValue(titleColor, forKey: "textColor")
         segmentedControl.tintColor = tintColor
         removeDateButton.tintColor = destructiveColor
-        removeDateButton.backgroundColor = background
+        removeDateButton.backgroundColor = buttonBackground
         setToCurrentButton.tintColor = neutralColor
-        setToCurrentButton.backgroundColor = background
+        setToCurrentButton.backgroundColor = buttonBackground
         saveButton.tintColor = tintColor
-        saveButton.backgroundColor = background
-        cancelButton.backgroundColor = background
+        saveButton.backgroundColor = buttonBackground
+        cancelButton.backgroundColor = buttonBackground
         removeDateBorder.backgroundColor = innerBorderColor
         currentBorder.backgroundColor = innerBorderColor
         saveBorder.backgroundColor = innerBorderColor
