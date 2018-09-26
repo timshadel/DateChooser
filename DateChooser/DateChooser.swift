@@ -164,6 +164,17 @@ public protocol DateChooserDelegate: class {
         return DateMode(rawValue: dateMode) ?? .date
     }
     
+    var adjustedDateTitle: String? {
+        guard let date = date else { return nil }
+        if let relativeDay = date.relativeDayString {
+            if dateFormatter.timeStyle == .none {
+                return relativeDay
+            }
+            return String.localizedStringWithFormat(NSLocalizedString("%@, %@", comment: "Format string for relative date. First parameter is relative day. Second parameter is time. E.g. Yesterday, 11:30 AM"), relativeDay, timeFormatter.string(from: date))
+        }
+        return dateFormatter.string(from: date)
+    }
+    
     
     // MARK: - Internal properties
     
@@ -455,19 +466,11 @@ private extension DateChooser {
     
     func updateDate() {
         if let _ = date {
-            title.text = adjustedDateTitle()
+            title.text = adjustedDateTitle
         } else {
             title.text = emptyTitle
         }
         delegate?.dateChanged(to: date)
-    }
-    
-    func adjustedDateTitle() -> String? {
-        guard let date = date else { return nil }
-        if let relativeDay = date.relativeDayString {
-            return String.localizedStringWithFormat(NSLocalizedString("%@, %@", comment: "Format string for relative date. First parameter is relative day. Second parameter is time. E.g. Yesterday, 11:30 AM"), relativeDay, timeFormatter.string(from: date))
-        }
-        return dateFormatter.string(from: date)
     }
     
     func constrainFullWidth(_ view: UIView, leading: CGFloat = 0, top: CGFloat = 0, trailing: CGFloat = 0, bottom: CGFloat = 0) {
@@ -491,24 +494,17 @@ private extension DateChooser {
 private extension Date {
     
     var relativeDayString: String? {
-        let now = Date()
-        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: now)
-        if isSameDay(as: yesterday) {
-            return NSLocalizedString("Yesterday", comment: "Relative date string for previous day")
-        }
-        if isSameDay(as: now) {
+        let calendar = Calendar.autoupdatingCurrent
+        if calendar.isDateInToday(self) {
             return NSLocalizedString("Today", comment: "Relative date string for current day")
         }
-        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: now)
-        if isSameDay(as: tomorrow) {
+        if calendar.isDateInYesterday(self) {
+            return NSLocalizedString("Yesterday", comment: "Relative date string for previous day")
+        }
+        if calendar.isDateInTomorrow(self) {
             return NSLocalizedString("Tomorrow", comment: "Relative date string for next day")
         }
         return nil
-    }
-    
-    func isSameDay(as date: Date?) -> Bool {
-        guard let date = date else { return false }
-        return Calendar.current.isDate(date, inSameDayAs: self)
     }
     
 }
