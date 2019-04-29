@@ -7,8 +7,8 @@
 
 import Foundation
 
-public extension Date {
-    
+extension Date {
+
     /**
      Rounds down a date by the specified minutes. For use with `UIDatePicker` to
      determine the display date when using a `minuteInterval` greater than 1.

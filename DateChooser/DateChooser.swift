@@ -15,17 +15,17 @@ public protocol DateChooserDelegate: class {
 }
 
 @IBDesignable open class DateChooser: UIView {
-    
+
     // MARK: - Enums
-    
+
     public enum DateMode: Int {
         case date
         case time
     }
-    
-    
+
+
     // MARK: - IB Inspectable properties
-    
+
     @IBInspectable open var cornerRadius: CGFloat {
         get {
             return layer.cornerRadius
@@ -34,49 +34,49 @@ public protocol DateChooserDelegate: class {
             layer.cornerRadius = newValue
         }
     }
-    
+
     @IBInspectable open var background: UIColor = .white {
         didSet {
             updateColors()
         }
     }
-    
+
     @IBInspectable open var buttonBackground: UIColor = .white {
         didSet {
             updateColors()
         }
     }
-    
+
     @IBInspectable open var titleColor: UIColor = .black {
         didSet {
             updateColors()
         }
     }
-    
+
     @IBInspectable open var neutralColor: UIColor = .darkGray {
         didSet {
             updateColors()
         }
     }
-    
+
     @IBInspectable open var destructiveColor: UIColor = .red {
         didSet {
             updateColors()
         }
     }
-    
+
     @IBInspectable open var innerBorderColor: UIColor = .lightGray {
         didSet {
             updateColors()
         }
     }
-    
+
     @IBInspectable open var titleFont: UIFont = .systemFont(ofSize: 17) {
         didSet {
             title.font = titleFont
         }
     }
-    
+
     @IBInspectable open var buttonFont: UIFont = .systemFont(ofSize: 16) {
         didSet {
             removeDateButton.titleLabel?.font = buttonFont
@@ -84,25 +84,25 @@ public protocol DateChooserDelegate: class {
             saveButton.titleLabel?.font = buttonFont
         }
     }
-    
+
     @IBInspectable open var capabilities: Int = DateChooserCapabilities.standard.rawValue {
         didSet {
             updateCapabilities()
         }
     }
-    
+
     @IBInspectable open var minuteInterval: Int = 5 {
         didSet {
             datePicker.minuteInterval = minuteInterval
         }
     }
-    
+
     @IBInspectable open var emptyTitle: String? = nil {
         didSet {
             updateDate()
         }
     }
-    
+
     @IBInspectable open var startingDate: Date? {
         didSet {
             let date = startingDate ?? Date()
@@ -112,7 +112,7 @@ public protocol DateChooserDelegate: class {
             updateDate()
         }
     }
-    
+
     @IBInspectable open var dateMode: Int = 0 {
         didSet {
             guard dateMode != oldValue else { return }
@@ -120,28 +120,27 @@ public protocol DateChooserDelegate: class {
             updateDatePicker()
         }
     }
-    
+
     @IBInspectable open var startingCountdownDuration: TimeInterval = 0.0 {
         didSet {
             datePicker.countDownDuration = startingCountdownDuration
         }
     }
-    
-    @IBInspectable open var removeButtonTitle: String = NSLocalizedString("Remove date", comment: "Button title to remove date") {
+
+    @IBInspectable open var removeButtonTitle: String = UserVisibleStrings.removeDate {
         didSet {
             removeDateButton.setTitle(removeButtonTitle, for: .normal)
         }
     }
-    
-    @IBInspectable open var blurEffectStyle: UIBlurEffectStyle = .extraLight {
+
+    @IBInspectable open var blurEffectStyle: UIBlurEffect.Style = .extraLight {
         didSet {
             updateBlur()
         }
     }
-    
-    
+
     // MARK: - Public properties
-    
+
     open var chosenDate: Date?
     public weak var delegate: DateChooserDelegate?
     public var programmaticCapabilities: DateChooserCapabilities {
@@ -152,35 +151,33 @@ public protocol DateChooserDelegate: class {
             capabilities = newValue.rawValue
         }
     }
-    
-    
+
     // MARK: - Computed properties
-    
+
     var computedCapabilities: DateChooserCapabilities {
         return DateChooserCapabilities(rawValue: capabilities)
     }
-    
+
     var computedDateMode: DateMode {
         return DateMode(rawValue: dateMode) ?? .date
     }
-    
+
     var adjustedDateTitle: String? {
         guard let date = date else { return nil }
         if let relativeDay = date.relativeDayString {
             if dateFormatter.timeStyle == .none {
                 return relativeDay
             }
-            return String.localizedStringWithFormat(NSLocalizedString("%@, %@", comment: "Format string for relative date. First parameter is relative day. Second parameter is time. E.g. Yesterday, 11:30 AM"), relativeDay, timeFormatter.string(from: date))
+            return "\(relativeDay), \(timeFormatter.string(from: date))"
         }
         return dateFormatter.string(from: date)
     }
-    
-    
+
     // MARK: - Internal properties
-    
+
     let title = UILabel()
     let segmentedContainer = UIView()
-    let segmentedControl = UISegmentedControl(items: [NSLocalizedString("Date", comment: "Title for date in segmented control"), NSLocalizedString("Time", comment: "Title for time in segmented control")])
+    let segmentedControl = UISegmentedControl(items: [UserVisibleStrings.date, UserVisibleStrings.time])
     let datePicker = UIDatePicker()
     let removeDateBorder = UIView()
     let removeDateButton = UIButton(type: .system)
@@ -191,84 +188,102 @@ public protocol DateChooserDelegate: class {
     let saveBorder = UIView()
     let saveButton = UIButton(type: .system)
     let stackView = UIStackView()
-    
-    
+
     // MARK: - Private properties
-    
+
     fileprivate lazy var dateFormatter = DateFormatter()
     fileprivate lazy var timeFormatter = DateFormatter()
     fileprivate let backgroundView = UIView()
     fileprivate let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
     fileprivate var date: Date?
-    
-    
+
     // MARK: - Constants
-    
-    static fileprivate let innerMargin: CGFloat = 8.0
-    static fileprivate let innerRuleHeight: CGFloat = 1.0
-    static fileprivate let buttonHeight: CGFloat = 44.0
-    
-    
+
+    fileprivate static let innerMargin: CGFloat = 8.0
+    fileprivate static let innerRuleHeight: CGFloat = 1.0
+    fileprivate static let buttonHeight: CGFloat = 44.0
+
     // MARK: - Overrides
-    
+
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setupViews()
     }
-    
-    public override init(frame: CGRect) {
+
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
     }
-    
-    open override func tintColorDidChange() {
+
+    override open func tintColorDidChange() {
         updateColors()
     }
-    
-    
+
     // MARK: - Public functions
-    
+
     public func change(to mode: DateMode) {
         dateMode = mode.rawValue
     }
-    
-    
+
+    // MARK: - Public strings
+
+    public struct UserVisibleStrings {
+        private static let bundle = Bundle(for: DateChooser.self)
+
+        // Use `var` everywhere to allow client apps to override the values if desired
+
+        public static var date = NSLocalizedString("Date", bundle: .dateChooser, comment: "Title for date in segmented control")
+        public static var time = NSLocalizedString("Time", bundle: .dateChooser, comment: "Title for time in segmented control")
+
+        public static var today = NSLocalizedString("Today", bundle: .dateChooser, comment: "Relative date string for current day")
+        public static var yesterday = NSLocalizedString("Yesterday", bundle: .dateChooser, comment: "Relative date string for previous day")
+        public static var tomorrow = NSLocalizedString("Tomorrow", bundle: .dateChooser, comment: "Relative date string for next day")
+
+        public static var save = NSLocalizedString("Save", bundle: .dateChooser, comment: "Save button title")
+        public static var cancel = NSLocalizedString("Cancel", bundle: .dateChooser, comment: "Cancel button title")
+        public static var removeDate = NSLocalizedString("Remove date", bundle: .dateChooser, comment: "Button title to remove date")
+
+        public static var setCurrentDateTime = NSLocalizedString("Set to current date/time", bundle: .dateChooser, comment: "Button title to set date to current date and time")
+        public static var setCurrentDate = NSLocalizedString("Set to current date", bundle: .dateChooser, comment: "Button title to set date to current date")
+        public static var setCurrentTime = NSLocalizedString("Set to current time", bundle: .dateChooser, comment: "Button title to set date to current time")
+    }
+
     // MARK: - Internal functions
-    
+
     @objc func updateDatePicker() {
         guard computedCapabilities.contains(.dateAndTimeSeparate) else { return }
         dateMode = segmentedControl.selectedSegmentIndex
         datePicker.datePickerMode = computedDateMode == .date ? .date : .time
         datePicker.minuteInterval = minuteInterval
     }
-    
+
     @objc func dateChanged() {
         date = datePicker.date
         updateDate()
         delegate?.countdownDurationChanged(to: datePicker.countDownDuration)
     }
-    
+
     @objc func removeDate() {
         date = nil
         datePicker.date = Date().rounded(minutes: minuteInterval)
         updateDate()
     }
-    
+
     @objc func setDateToCurrent() {
         let now = Date().rounded(minutes: minuteInterval)
         date = now
         datePicker.date = now
         updateDate()
     }
-    
+
     @objc func cancelChanges() {
         delegate?.dateChooserCancelled()
     }
-    
+
     @objc func saveChanges() {
         delegate?.dateChooserSaved(with: date, duration: datePicker.countDownDuration)
     }
-    
+
     @objc func toggleMinuteInterval() {
         if computedCapabilities.contains(.dateAndTimeSeparate) && computedDateMode == .date {
             return
@@ -282,22 +297,19 @@ public protocol DateChooserDelegate: class {
             delegate?.dateChanged(to: datePicker.date)
         }
     }
-    
+
     @objc func buttonTouchBegan(_ button: UIButton) {
         button.backgroundColor = .clear
     }
-    
+
     @objc func buttonTouchEnded(_ button: UIButton) {
         button.backgroundColor = background
     }
-    
 }
-
 
 // MARK: - Private functions
 
 private extension DateChooser {
-    
     func setupViews() {
         clipsToBounds = true
         addSubview(backgroundView)
@@ -315,7 +327,7 @@ private extension DateChooser {
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fill
-        
+
         let titleContainer = UIView()
         titleContainer.addSubview(title)
         constrainFullWidth(title, leading: DateChooser.innerMargin, top: DateChooser.innerMargin, trailing: DateChooser.innerMargin, bottom: DateChooser.innerMargin)
@@ -354,7 +366,7 @@ private extension DateChooser {
         let removeDateButtonHeight = removeDateButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight)
         removeDateButtonHeight.priority = UILayoutPriority(rawValue: 999)
         removeDateButtonHeight.isActive = true
-        removeDateButton.setTitle(NSLocalizedString("Remove date", comment: "Button title to remove date"), for: .normal)
+        removeDateButton.setTitle(UserVisibleStrings.removeDate, for: .normal)
         removeDateButton.accessibilityIdentifier = "DateChooser.removeDateButton"
 
         stackView.addArrangedSubview(currentBorder)
@@ -371,14 +383,14 @@ private extension DateChooser {
 
         stackView.addArrangedSubview(saveBorder)
         saveBorder.heightAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight).isActive = true
-        
+
         let saveCancelContainer = UIStackView()
         stackView.addArrangedSubview(saveCancelContainer)
         saveCancelContainer.axis = .horizontal
         saveCancelContainer.addArrangedSubview(cancelButton)
         cancelButton.addTarget(self, action: #selector(cancelChanges), for: .touchUpInside)
         addTouchHandlers(to: cancelButton)
-        cancelButton.setTitle(NSLocalizedString("Cancel", comment: "Cancel button title"), for: .normal)
+        cancelButton.setTitle(UserVisibleStrings.cancel, for: .normal)
         cancelButton.accessibilityIdentifier = "DateChooser.cancelButton"
         saveCancelContainer.addArrangedSubview(cancelBorder)
         cancelBorder.widthAnchor.constraint(equalToConstant: DateChooser.innerRuleHeight).isActive = true
@@ -387,7 +399,7 @@ private extension DateChooser {
         saveButton.addTarget(self, action: #selector(saveChanges), for: .touchUpInside)
         addTouchHandlers(to: saveButton)
         saveButton.heightAnchor.constraint(equalToConstant: DateChooser.buttonHeight).isActive = true
-        saveButton.setTitle(NSLocalizedString("Save", comment: "Save button title"), for: .normal)
+        saveButton.setTitle(UserVisibleStrings.save, for: .normal)
         saveButton.accessibilityIdentifier = "DateChooser.saveButton"
         let buttonWidth = cancelButton.widthAnchor.constraint(equalTo: saveButton.widthAnchor)
         buttonWidth.priority = UILayoutPriority(rawValue: 999)
@@ -396,7 +408,7 @@ private extension DateChooser {
         updateColors()
         updateCapabilities()
     }
-    
+
     func updateColors() {
         backgroundView.backgroundColor = background
         title.textColor = titleColor
@@ -414,11 +426,11 @@ private extension DateChooser {
         saveBorder.backgroundColor = innerBorderColor
         cancelBorder.backgroundColor = innerBorderColor
     }
-    
+
     func updateBlur() {
         blurView.effect = UIBlurEffect(style: blurEffectStyle)
     }
-    
+
     func updateCapabilities() {
         let includeRemoveDate = computedCapabilities.contains(.removeDate)
         removeDateBorder.isHidden = !includeRemoveDate
@@ -440,17 +452,17 @@ private extension DateChooser {
             dateFormatter.dateStyle = .full
             timeFormatter.timeStyle = .short
             timeFormatter.dateStyle = .none
-            currentButtonTitle = NSLocalizedString("Set to current date/time", comment: "Button title to set date to current date and time")
+            currentButtonTitle = UserVisibleStrings.setCurrentDateTime
         } else if computedCapabilities.contains(.timeOnly) {
             datePicker.datePickerMode = .time
             dateFormatter.timeStyle = .short
             dateFormatter.dateStyle = .none
-            currentButtonTitle = NSLocalizedString("Set to current time", comment: "Button title to set date to current time")
+            currentButtonTitle = UserVisibleStrings.setCurrentTime
         } else if computedCapabilities.contains(.dateAndTimeCombined) {
             datePicker.datePickerMode = .dateAndTime
             dateFormatter.timeStyle = .short
             dateFormatter.dateStyle = .full
-            currentButtonTitle = NSLocalizedString("Set to current date/time", comment: "Button title to set date to current date and time")
+            currentButtonTitle = UserVisibleStrings.setCurrentDateTime
         } else if computedCapabilities.contains(.countdown) {
             datePicker.datePickerMode = .countDownTimer
             currentButtonTitle = ""
@@ -458,12 +470,12 @@ private extension DateChooser {
             datePicker.datePickerMode = .date
             dateFormatter.timeStyle = .none
             dateFormatter.dateStyle = .full
-            currentButtonTitle = NSLocalizedString("Set to current date", comment: "Button title to set date to current date")
+            currentButtonTitle = UserVisibleStrings.setCurrentDate
         }
         setToCurrentButton.setTitle(currentButtonTitle, for: .normal)
         updateDate()
     }
-    
+
     func updateDate() {
         if let _ = date {
             title.text = adjustedDateTitle
@@ -472,7 +484,7 @@ private extension DateChooser {
         }
         delegate?.dateChanged(to: date)
     }
-    
+
     func constrainFullWidth(_ view: UIView, leading: CGFloat = 0, top: CGFloat = 0, trailing: CGFloat = 0, bottom: CGFloat = 0) {
         guard let superview = view.superview else { fatalError("\(view) has no superview") }
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -481,30 +493,37 @@ private extension DateChooser {
         view.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -trailing).isActive = true
         view.bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -bottom).isActive = true
     }
-    
+
     func addTouchHandlers(to button: UIButton) {
         button.addTarget(self, action: #selector(buttonTouchBegan(_:)), for: .touchDown)
         button.addTarget(self, action: #selector(buttonTouchEnded(_:)), for: .touchDragExit)
         button.addTarget(self, action: #selector(buttonTouchEnded(_:)), for: .touchUpInside)
     }
-    
+
 }
 
+fileprivate extension Date {
 
-private extension Date {
-    
     var relativeDayString: String? {
         let calendar = Calendar.autoupdatingCurrent
         if calendar.isDateInToday(self) {
-            return NSLocalizedString("Today", comment: "Relative date string for current day")
+            return DateChooser.UserVisibleStrings.today
         }
         if calendar.isDateInYesterday(self) {
-            return NSLocalizedString("Yesterday", comment: "Relative date string for previous day")
+            return DateChooser.UserVisibleStrings.yesterday
         }
         if calendar.isDateInTomorrow(self) {
-            return NSLocalizedString("Tomorrow", comment: "Relative date string for next day")
+            return DateChooser.UserVisibleStrings.tomorrow
         }
         return nil
     }
-    
+
+}
+
+fileprivate extension Bundle {
+
+    static var dateChooser: Bundle {
+        return Bundle(for: DateChooser.self)
+    }
+
 }

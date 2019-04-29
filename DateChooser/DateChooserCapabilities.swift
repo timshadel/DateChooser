@@ -10,11 +10,11 @@ import Foundation
 public struct DateChooserCapabilities: OptionSet {
     
     public let rawValue: Int
-    
+
     public init(rawValue: Int) {
         self.rawValue = rawValue
     }
-    
+
     public static let setToCurrent = DateChooserCapabilities(rawValue: 1)
     public static let removeDate = DateChooserCapabilities(rawValue: 2)
     public static let dateAndTimeSeparate = DateChooserCapabilities(rawValue: 4)
@@ -23,7 +23,7 @@ public struct DateChooserCapabilities: OptionSet {
     public static let timeOnly = DateChooserCapabilities(rawValue: 32)
     public static let countdown = DateChooserCapabilities(rawValue: 64)
     public static let cancel = DateChooserCapabilities(rawValue: 128)
-    
+
     public static let standard: DateChooserCapabilities = [.setToCurrent, .removeDate, .dateAndTimeSeparate]
     
 }
