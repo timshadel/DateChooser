@@ -113,6 +113,20 @@ public protocol DateChooserDelegate: class {
         }
     }
 
+    @IBInspectable open var earliestDateAllowed: Date? {
+        didSet {
+            datePicker.minimumDate = earliestDateAllowed?.rounded(minutes: minuteInterval)
+            updateDatePicker()
+        }
+    }
+
+    @IBInspectable open var latestDateAllowed: Date? {
+        didSet {
+            datePicker.maximumDate = latestDateAllowed?.rounded(minutes: minuteInterval)
+            updateDatePicker()
+        }
+    }
+
     @IBInspectable open var dateMode: Int = 0 {
         didSet {
             guard dateMode != oldValue else { return }
@@ -255,6 +269,14 @@ public protocol DateChooserDelegate: class {
         dateMode = segmentedControl.selectedSegmentIndex
         datePicker.datePickerMode = computedDateMode == .date ? .date : .time
         datePicker.minuteInterval = minuteInterval
+        if let min = datePicker.minimumDate, datePicker.date < min {
+            datePicker.date = min
+            updateDate()
+        }
+        if let max = datePicker.maximumDate, datePicker.date > max {
+            datePicker.date = max
+            updateDate()
+        }
     }
 
     @objc func dateChanged() {
